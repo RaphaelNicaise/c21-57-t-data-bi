@@ -23,3 +23,13 @@
 - ![Seaborn](https://img.shields.io/badge/SQL-005377?logo=SQL&logoColor=fff)
 - ![Power BI](https://img.shields.io/badge/Power_BI-F2C811?logo=power-bi&logoColor=white)
 - ![Visual Studio Code](https://custom-icon-badges.demolab.com/badge/Visual%20Studio%20Code-0078d7.svg?logo=vsc&logoColor=white)
+
+## Instalación y Ejecución
+1. Clonar el repositorio
+```bash
+git clone https://github.com/tu-usuario/c21-57-t-data-bi.git
+```
+2. Instalar las dependencias
+```bash
+pip install -r requirements.txt
+```
