@@ -27,7 +27,7 @@
 ## Instalación y Ejecución
 1. Clonar el repositorio
 ```bash
-git clone https://github.com/tu-usuario/c21-57-t-data-bi.git
+git clone https://github.com/RaphaelNicaise/c21-57-t-data-bi.git
 ```
 2. Instalar las dependencias
 ```bash
