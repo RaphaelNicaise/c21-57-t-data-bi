@@ -1,6 +1,10 @@
-# c21-57-t-data-bi
-## Proyecto
-Link Kaggle: [![Dataset](https://img.shields.io/badge/Dataset-00599C?logo=kaggle&logoColor=fff)](https://www.kaggle.com/datasets/gabrielramos87/an-online-shop-business)
+## c21-57-t-data-bi
+# Proyecto: Análisis de Carrito Abandonado
+Objetivo: Analizar el comportamiento de los usuarios que
+abandonan el carrito de compras en un sitio web de e-commerce para identificar
+posibles razones y proponer estrategias de retención.
+
+Dataset: [![Dataset](https://img.shields.io/badge/Dataset%20Kaggle-00599C?logo=kaggle&logoColor=fff)](https://www.kaggle.com/datasets/gabrielramos87/an-online-shop-business)
 
 ### Colaboradores
 
@@ -34,3 +38,5 @@ git clone https://github.com/RaphaelNicaise/c21-57-t-data-bi.git
 ```bash
 pip install -r requirements.txt
 ```
+
+
