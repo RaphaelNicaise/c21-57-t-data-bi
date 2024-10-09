@@ -1,5 +1,6 @@
 # c21-57-t-data-bi
 ## Proyecto
+Link Kaggle: [![Dataset](https://img.shields.io/badge/Dataset-00599C?logo=kaggle&logoColor=fff)](https://www.kaggle.com/datasets/gabrielramos87/an-online-shop-business)
 
 ### Colaboradores
 
