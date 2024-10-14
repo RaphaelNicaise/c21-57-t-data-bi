@@ -1,19 +1,23 @@
-from prefect import task, flow
+from prefect import task, flow, get_run_logger
 from prefect.runtime import flow_run
 import pandas as pd
 import os
 import configparser
-import logging
 
-logging.basicConfig(level=logging.INFO)
 
 config = configparser.ConfigParser()
 config.read('pipeline.conf')
-os.environ['KAGGLE_USERNAME'] = config['kaggle-credentials']['username']
-os.environ['KAGGLE_KEY'] = config['kaggle-credentials']['key']
 
+try:
+    os.environ['KAGGLE_USERNAME'] = config['kaggle-credentials']['username']
+    os.environ['KAGGLE_KEY'] = config['kaggle-credentials']['key']
+except KeyError as e:
+    logger = get_run_logger()
+    logger.error(f'Error al leer las credenciales de kaggle: {e}')
+    raise e
+
+from  kaggle.api.kaggle_api_extended import KaggleApi
 from kaggle.rest import ApiException
-import kaggle.api.kaggle_api_extended as KaggleApi
 
 
 @task(
@@ -34,12 +38,13 @@ def get_dataset_from_kaggle(path:str, dataset:str, new_name: str='data.csv'):
     Returns:
         path+'/'+new_name: Retorno el path completo del archivo descargado para tenerlo disponible en la siguiente task
     """
+    logger = get_run_logger()
     api = KaggleApi()
     api.authenticate()
     try:
         api.dataset_download_files(dataset, path, unzip=True)
     except ApiException as e:
-        logging.error(f'Error al descargar el dataset: {e}')
+        logger.error(f'Error al descargar el dataset: {e}')
         raise e
     
     file_path = os.path.join(path, new_name)
@@ -63,12 +68,13 @@ def get_data_from_csv(path:str)->pd.DataFrame:
     Returns:
         pd.DataFrame: Retornamos un dataframe con los datos cargados
     """
+    logger = get_run_logger()
     df = pd.read_csv(path)
     
     if df is None:
         raise ValueError('No data found')
     
-    logging.info(f'Obteniendo {len(df)} registros en el dataframe')
+    logger.info(f'Obteniendo {len(df)} registros en el dataframe')
     
     return df  
 
@@ -85,7 +91,7 @@ def transform_df(df: pd.DataFrame)->pd.DataFrame:
     Returns:
         pd.DataFrame: Retornamos el dataframe transformado
     """
-    
+    logger = get_run_logger()
     if not isinstance(df, pd.DataFrame):
         raise ValueError('El input no es un dataframe')
         
@@ -98,7 +104,7 @@ def transform_df(df: pd.DataFrame)->pd.DataFrame:
     df = df.dropna(subset=['CustomerNo']) # Dropeamos los registros que no tienen CustomerNo
     df = df.astype({'CustomerNo': 'int'}) # Convertimos CustomerNo a int
     
-    logging.info(f'Dataframe transformado')
+    logger.info(f'Dataframe transformado')
     
     return df
 
@@ -114,18 +120,18 @@ def divide_df_in_canceladas_y_concretadas(df: pd.DataFrame)->tuple:
     Returns:
         tuple (pd.DataFrame): Devuelve una tupla de dos dataframes
     """
-    
+    logger = get_run_logger()
     if not isinstance(df, pd.DataFrame):
         raise ValueError('El input no es un dataframe')
     
     df_canceladas = df[df['TransactionNo'].str.contains('C')] # Filtramos las transacciones canceladas
     df_concretadas = df.drop(df_canceladas.index) # Eliminamos las transacciones canceladas del df original
     
-    logging.info(f'Dividiendo el dataframe')
+    logger.info(f'Dividiendo el dataframe')
     return df_canceladas, df_concretadas
 
 @task(
-    name='transform_df_to_parquet->{path}',
+    name=f'transform_df_to_parquet',
     description='Transformamos un dataframe en un archivo parquet'
 )
 def transform_df_to_parquet(df: pd.DataFrame, path: str):
@@ -136,12 +142,13 @@ def transform_df_to_parquet(df: pd.DataFrame, path: str):
         df (pd.DataFrame): Dataframe a guardar
         path (str): path donde quermos guardar el archivo .parquet
     """
+    logger = get_run_logger()
     if not isinstance(df, pd.DataFrame):
         raise ValueError('El input no es un dataframe')
     
     df.to_parquet(path)
     
-    logging.info(f'Guardado archivo en {path}')
+    logger.info(f'Guardado archivo en {path}')
     
 
 @flow(
@@ -149,6 +156,7 @@ def transform_df_to_parquet(df: pd.DataFrame, path: str):
     description='Pipeline para extraer, transformar y cargar datos de un dataset de kaggle'
 )
 def etl():
+    logger = get_run_logger()
     path = get_dataset_from_kaggle('../data/bronze','gabrielramos87/an-online-shop-business','transactions.csv')
     df = get_data_from_csv(path)
     df = transform_df(df)
@@ -156,7 +164,7 @@ def etl():
     
     transform_df_to_parquet(df_canceladas, '../data/silver/transacciones_canceladas.parquet')
     transform_df_to_parquet(df_concretadas, '../data/silver/transacciones_concretadas.parquet')
-    logging.info('Pipeline finalizado y completado')
+    logger.info('Pipeline finalizado y completado')
     
 if __name__ == '__main__':
     etl.serve(name="etl-flow")
