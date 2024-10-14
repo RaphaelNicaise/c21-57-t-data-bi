@@ -25,9 +25,11 @@ Dataset: [![Dataset](https://img.shields.io/badge/Dataset%20Kaggle-00599C?logo=k
 - ![Pandas](https://img.shields.io/badge/Pandas-150458?logo=pandas&logoColor=fff)
 - ![Numpy](https://img.shields.io/badge/Numpy-013243?logo=numpy&logoColor=fff)
 - ![Matplotlib](https://img.shields.io/badge/Matplotlib-11557C?logo=matplotlib&logoColor=fff)
-- ![Seaborn](https://img.shields.io/badge/SQL-005377?logo=SQL&logoColor=fff)
+- ![Seaborn](https://img.shields.io/badge/Seaborn-005377?logo=Seaborn&logoColor=fff)
 - ![Power BI](https://img.shields.io/badge/Power_BI-F2C811?logo=power-bi&logoColor=white)
 - ![Visual Studio Code](https://custom-icon-badges.demolab.com/badge/Visual%20Studio%20Code-0078d7.svg?logo=vsc&logoColor=white)
+- ![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=fff)
+- ![Prefect](https://img.shields.io/badge/Prefect-11557C?logo=Prefect&logoColor=fff)
 
 ## Instalación y Ejecución
 1. Clonar el repositorio
