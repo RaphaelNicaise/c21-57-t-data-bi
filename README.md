@@ -12,9 +12,8 @@ Dataset: [![Dataset](https://img.shields.io/badge/Dataset%20Kaggle-00599C?logo=k
 - Ruth Estefania Puyo: Data Analyst & BI Analyst  [![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white)](https://github.com/ruthpuyo) [![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/ruth-estefania-puyo-929572b0)
 - Pamela Cardozo: ML Developer & Data Analyst  [![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white)](https://github.com/PamelaCardozo) [![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/npamelacardozo)
 - Leando Matias Luna: ML Developer  [![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white)](https://github.com/s4phulkx) [![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/leandromluna)
-- Yalideth Sánchez: ML Developer & Data Analyst [![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white)](https://github.com/yssanchez) [![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/yalideth-sanchez-0478a819b?)
-- Elizabeth Peralta:
-- Hernan Luis:
+- Yalideth Sánchez: Data Analyst [![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white)](https://github.com/yssanchez) [![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/yalideth-sanchez-0478a819b?)
+- Elizabeth Peralta: BI Analyst [![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white)]() [![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=flat&logo=linkedin&logoColor=white)]()
 
 ### Stack Tech
 - ![Trello](https://img.shields.io/badge/Trello-0052CC?logo=trello&logoColor=fff)
@@ -28,17 +27,26 @@ Dataset: [![Dataset](https://img.shields.io/badge/Dataset%20Kaggle-00599C?logo=k
 - ![Seaborn](https://img.shields.io/badge/Seaborn-005377?logo=Seaborn&logoColor=fff)
 - ![Power BI](https://img.shields.io/badge/Power_BI-F2C811?logo=power-bi&logoColor=white)
 - ![Visual Studio Code](https://custom-icon-badges.demolab.com/badge/Visual%20Studio%20Code-0078d7.svg?logo=vsc&logoColor=white)
-- ![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=fff)
 - ![Prefect](https://img.shields.io/badge/Prefect-11557C?logo=Prefect&logoColor=fff)
 
 ## Instalación y Ejecución
-1. Clonar el repositorio
+1. **Clonar el repositorio**
 ```bash
 git clone https://github.com/RaphaelNicaise/c21-57-t-data-bi.git
 ```
-2. Instalar las dependencias
+2. **Crear un entorno virtual en la carpeta raiz del proyecto**
+```bash
+pip install virtualenv                               
+```
+```bash
+python -m venv venv
+```
+```bash
+./venv/Scripts/activate
+```
 ```bash
 pip install -r requirements.txt
 ```
+
 
 

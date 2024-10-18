@@ -1,5 +1,0 @@
-pandas == 2.2.2
-great-expectations == 0.18.19
-ydata_profiling == 4.10.0
-prefect == 3.0.2
-kaggle == 1.6.17
