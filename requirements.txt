@@ -53,3 +53,4 @@ tzdata==2024.2
 wcwidth==0.2.13
 xgboost==2.1.1
 streamlit-keyup==0.2.4
+streamlit-option-menu==0.4.0
