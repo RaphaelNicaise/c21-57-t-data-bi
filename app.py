@@ -5,11 +5,22 @@ from st_keyup import st_keyup
 from matplotlib import pyplot as plt
 from streamlit_option_menu import option_menu
 import time
+import numpy as np
 
 st.set_page_config(page_title="Analisis de abandono de carrito", 
                    layout="centered",
                    page_icon="🛒")
                    
+def borrar_carrito():
+    st.session_state.carrito = []
+
+@st.cache_resource
+def load_model():
+    modelo = "path" # cargar modelo como .pkl o .joblib
+    return modelo
+
+model = load_model()
+
 @st.cache_data
 def load_data()->tuple[pd.DataFrame]:
     """
@@ -246,12 +257,64 @@ match menu:
         
                             
     case "Resultados del Modelo":
-        
+            
         # st.cache_resource is the recommended way to cache global resources like ML models or database connections. 
         # Use st.cache_resource when your function returns unserializable objects that you don’t want to load multiple times. 
         # It returns the cached object itself, which is shared across all reruns and sessions without copying or duplication. 
         # If you mutate an object that is cached using st.cache_resource, that mutation will exist across all reruns and sessions.
         
-        st.write('Resultados del Modelo')  
-          
+        # Carrito para predecir
+        
+        col1,col2 = st.columns([4,3])
+        
+        if "carrito" not in st.session_state:
+            st.session_state["carrito"] = []
+        
+        with col1:
+            with st.form("formulario-predic"):
+                st.write("Ingrese productos al carrito para predecir: ")
+                
+                feature1 = st.number_input("Cantidad de Productos", min_value=1, max_value=10000)
+                feature2 = st.number_input("Precio Total", min_value=1)
+                feature3 = st.selectbox("Pais", df_ambas['Country'].unique())
+                feature4 = st.selectbox("Producto", df_ambas['ProductName'].unique())
+                
+                input_data = {
+                    "Cantidad de Productos": feature1,
+                    "Precio Total": feature2,
+                    "Pais": feature3,
+                    "Producto": feature4
+                }
+                
+                if st.form_submit_button("Agregar al carrito",icon='🛒',):
+                    st.session_state["carrito"].append(input_data)
+                
+        with col2:
+            
+            subcol1, subcol2 = st.columns([1, 1])
+            
+            with subcol1:
+                st.write("Carrito de compras")
+            with subcol2:
+                if st.button("Limpiar Carrito", key="limpiar",icon='🗑️'):
+                    borrar_carrito()
+            
+            if st.session_state["carrito"]:
+                df = st.session_state["carrito"]
+            
+                df = pd.DataFrame(df)
+                st.dataframe(df)
+        
+        if st.button("Predecir carrito", key="predict",type='primary'):
+                if len(st.session_state["carrito"]) == 0:
+                    st.error("No hay productos en el carrito")
+                else:   
+                    prediccion = True 
+                    borrar_carrito()
+                    if prediccion != 1:
+                        st.error("Prediccion del Modelo: El Carrito sera cancelado")
+                    else:
+                        st.success("Prediccion del Modelo: El Carrito sera concretado")
+                
+        
 st.write('Desarrollado por: [Raphael Nicaise](https://www.linkedin.com/in/rapha%C3%ABl-nicaise-68025b27a/)')
