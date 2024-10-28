@@ -4,6 +4,7 @@ from datetime import datetime
 from st_keyup import st_keyup
 from matplotlib import pyplot as plt
 from streamlit_option_menu import option_menu
+import time
 
 st.set_page_config(page_title="Analisis de abandono de carrito", 
                    layout="centered",
@@ -25,12 +26,17 @@ df_canceladas, df_concretadas, df_ambas = load_data()
 
 col1, col2 = st.columns([4, 1])
 with col1:
-    st.title('Analisis de abandono de carrito')
+
+    st.markdown(
+        body="""<h1 style="text-align: center; color: #1c95cd;">Análisis de abandono de carrito</h1>""",
+        unsafe_allow_html=True
+    )
+    
 with col2:    
     st.markdown(
         body="""
-        <a href="https://github.com/RaphaelNicaise/c21-57-t-data-bi" target="_blank">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt="Repositorio" style="width: 50px; height: 50px; filter: invert(1);">
+        <a href="https://github.com/No-Country-simulation/c21-57-t-data-bi" target="_blank">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt="Repositorio" style="width: 50px; height: 50px; filter: invert(1); ">
         </a>
         """,
         unsafe_allow_html=True
@@ -39,12 +45,49 @@ with col2:
 # Sidebar para seleccionar pagina
 # page = st.sidebar.selectbox("Seleccione una página", ["Informacion","Consultas a df", "Visualizaciones","Resultados del Modelo"])
 # Menu de opciones
+if 'selected_menu' not in st.session_state:
+    st.session_state.selected_menu = "Informacion"
+
 menu = option_menu(menu_title=None,
                    options=["Informacion","Consultas", "Visualizaciones","Resultados del Modelo"],
                    orientation='horizontal',
                    icons=['info-circle','search','file-bar-graph-fill','robot'],
                    menu_icon='cast',
-                   default_index=0)
+                   default_index=0,
+                   styles={
+                    "container": {
+                        "padding": "0!important",
+                        "background-color": "#f0f2f6",  # Fondo del contenedor
+                        "border-radius": "5px",
+                        "border": "1px solid #dcdcdc",
+                    },
+                    "icon": {
+                        "color": "black",  # Color de icono normal
+                        "font-size": "24px",
+                        "display": "block",
+                        "margin-bottom": "5px"
+                    },
+                    "nav-link": {
+                        "display": "flex",
+                        "flex-direction": "column",
+                        "align-items": "center",
+                        "justify-content": "center",
+                        "color": "#3a3a3a",  # Color de texto de los links no seleccionados
+                        "font-size": "15px",
+                        "padding": "12px 15px",
+                        "border-radius": "5px",
+                        "--hover-color": "#e0e7f3",
+                        "height": "80px"
+                    },
+                    "nav-link-selected": {
+                        "background-color": "#1c95cd",  # Fondo del link seleccionado
+                        "color": "#ffffff",  # Color de texto e icono del link seleccionado
+                        "border-radius": "5px",
+                        "transition": "background-color 0.3s ease",
+                    }
+        })
+
+st.session_state.selected_menu = menu
 
 
 match menu:
@@ -84,10 +127,12 @@ match menu:
 
         if transaccion not in ['', None]:
             df = df[df['TransactionNo'].str.contains(transaccion.upper())]
-            
+    
+        
         # Mostramos el df resultante
-        st.dataframe(df)
-
+        with st.spinner('Cargando...'):
+            st.dataframe(df)
+        
         # Boton para descargar el dataframe resultante
         col1, col2, col3 = st.columns([1, 1, 1])
 
