@@ -102,7 +102,9 @@ match menu:
         
     case "Consultas":
     #Filtro de tipo de compra
-        opcion = st.selectbox('Selecciona un tipo de compra', ['Ambas','Canceladas','Concretadas'])
+        col1,col2 = st.columns([1,1])
+        with col1:
+            opcion = st.selectbox('Selecciona un tipo de compra', ['Ambas','Canceladas','Concretadas'])
         match opcion:
             case 'Ambas':
                 df = df_ambas
@@ -117,7 +119,8 @@ match menu:
         df_paises.insert(0, 'Todos')
 
         # Filtro de pais, DEFAULT: Todos
-        pais = st.selectbox('Selecciona un país', df_paises, index=0)
+        with col2:
+            pais = st.selectbox('Selecciona un país', df_paises, index=0)
 
         if pais in df_paises and pais != 'Todos':
             df = df[df['Country'] == pais]
@@ -144,6 +147,7 @@ match menu:
 
     case "Visualizaciones":
         
+        # MUESTRA 1 (GRAFICO 1)
         col1, col2 = st.columns([1, 1])
         with col1:   
             # Grafico de barras
@@ -154,8 +158,93 @@ match menu:
             # mostrar el grafico
             st.pyplot(fig)
         with col2:
-            pass
+                
+            st.write("Este grafico muestra la cantidad de transacciones canceladas por país")
+            with st.expander("Codigo",expanded=True):
+                code = """
+                        fig, ax = plt.subplots()
+                        df_canceladas['Country'].value_counts().plot(kind='bar', ax=ax)
+                        ax.set_title('Transacciones Canceladas por país')
+                        ax.set_xlabel('Paises')
+                    """
+                st.code(code, language='python')
+        
+        st.divider()
+        
+        # MUESTRA 2 (GRAFICO 2)
+        col1, col2 = st.columns([1, 1])
+        with col1:
+            st.write("Este grafico muestra la cantidad de transacciones concretadas por país")
+            with st.expander("Codigo", expanded=True):
+                code = """
+                        fig, ax = plt.subplots()
+                        df_concretadas['Country'].value_counts().plot(kind='bar', ax=ax)
+                        ax.set_title('Transacciones Concretadas por país')
+                        ax.set_xlabel('Paises')
+                        st.pyplot(fig)
+                        """
+                st.code(code, language='python')
             
+        with col2:
+            # Grafico de barras
+            fig, ax = plt.subplots()
+            df_concretadas['Country'].value_counts().plot(kind='bar', ax=ax)
+            ax.set_title('Transacciones Concretadas por país')
+            ax.set_xlabel('Paises')
+            # mostrar el grafico
+            st.pyplot(fig)
+        
+        st.divider()       
+        
+        # GRAFICO 3
+        # Precio x Cantidad de los productos mas comprados en un pais seleccionado
+        st.write("Los 10 productos con mas $ Total recaudado en un país seleccionado")
+
+        df_paises = df_ambas['Country'].unique()
+        df_paises = df_paises.tolist()
+        # Insertamos un valor para mostrar todos los paises
+        df_paises.insert(0, 'Todos')
+
+        # Filtro de país
+        pais_seleccionado = st.selectbox('Selecciona un país para ver los productos que mas generaron ganancias', df_paises)
+
+        # Filtrar el dataframe por el país seleccionado
+        if pais_seleccionado != 'Todos':
+            df = df_ambas[df_ambas['Country'] == pais_seleccionado]
+        else:
+            df = df_ambas
+        # Agrupar por producto y calcular la cantidad total comprada y el precio total
+        df_productos = df.groupby('ProductName').agg({'Quantity': 'sum', 'Price': 'sum'}).reset_index()
+
+        # Crear una nueva columna para el total recaudado (Cantidad * Precio)
+        df_productos['TotalRecaudado'] = df_productos['Quantity'] * df_productos['Price']
+
+        # Ordenar por TotalRecaudado y agarra los primeros 10
+        df_productos = df_productos.sort_values(by='TotalRecaudado', ascending=False).head(10)
+
+        with st.spinner('Cargando...'):
+            fig, ax = plt.subplots()
+            df_productos_sorted = df_productos.sort_values(by='TotalRecaudado', ascending=True)
+            ax.barh(df_productos_sorted['ProductName'], df_productos_sorted['TotalRecaudado']) 
+            ax.set_title(f'Precio x Cantidad: Productos que mas recaudaron de {pais_seleccionado}')
+            ax.set_xlabel('$ total recaudado')
+            ax.set_ylabel('Producto')       
+            st.pyplot(fig)
+        
+        with st.expander("Codigo"):
+                code = """
+                        fig, ax = plt.subplots()
+                        df_productos_sorted = df_productos.sort_values(by='TotalRecaudado', ascending=True)
+                        ax.barh(df_productos_sorted['ProductName'], df_productos_sorted['TotalRecaudado']) 
+                        ax.set_title(f'Precio x Cantidad de los productos más comprados en {pais_seleccionado}')
+                        ax.set_xlabel('$ total recaudado')
+                        ax.set_ylabel('Producto')       
+                        st.pyplot(fig)
+                        """
+                st.code(code, language='python')
+        
+        
+                            
     case "Resultados del Modelo":
         
         # st.cache_resource is the recommended way to cache global resources like ML models or database connections. 
